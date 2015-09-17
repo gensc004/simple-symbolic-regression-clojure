@@ -55,6 +55,7 @@
 
 (defn run-script [script bindings]
   "loop over every item in the script and modify the stack accordingly"
+  "r/fold here did not change much"
   (reduce (partial process-token bindings) [] script)
   )
 
@@ -75,4 +76,5 @@
     score-penalty))
 
 (defn total-score-on [script rubrics]
-  (reduce + (map (partial score-on script) rubrics)))
+  "This r/fold seems to help when there is a pmap on gp line 109, but toherwise it doesnt change much"
+  (r/fold + (vec (map (partial score-on script) rubrics))))

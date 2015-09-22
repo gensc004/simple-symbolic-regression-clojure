@@ -71,8 +71,8 @@
 
 (defn score-on [script rubric]
   (if-let [result (:result (interpret script (:input rubric)))]
-    (abs (- (:output rubric) result))
-    score-penalty))
+    (future (abs (- (:output rubric) result)))
+    (future score-penalty)))
 
 (defn total-score-on [script rubrics]
-  (reduce + (map (partial score-on script) rubrics)))
+  (r/fold + (vec (map #(deref (score-on script %)) rubrics))))

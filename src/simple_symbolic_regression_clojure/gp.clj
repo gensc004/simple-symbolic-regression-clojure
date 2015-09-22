@@ -139,14 +139,14 @@
                     carrying-capacity
                     #(make-unscored-baby population mutation-rate))
         scored-brood (score-population new-brood rubrics)]
-    (take carrying-capacity (sort-by get-score (concat population scored-brood)))
+    (future (take carrying-capacity (sort-by get-score (concat population scored-brood))))
     ))
 
 
 (defn future-history
   "creates a lazy list of iterations by applying `one-seasonal-cycle` to an initial population"
   [initial-pop mutation-rate rubrics]
-  (iterate #(one-seasonal-cycle % mutation-rate rubrics) initial-pop))
+  (iterate #(deref (one-seasonal-cycle % mutation-rate rubrics)) initial-pop))
 
 
 (defn winners
